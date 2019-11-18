@@ -2,14 +2,16 @@
 
 #include <cstdlib> // for EXIT_SUCCESS and EXIT_FAILURE
 
-void run_main_loop(int);
 /*
-Pre Condition:
- -Initialized freeGLUT
-Post Condition:
- -Calls the main loop functions and sets itself to be called back in 1000 /
-SCREEN_FPS milliseconds Side Effects: -Sets glutTimerFunc
+pre-condition:
+    * initialized freeGLUT
+post-condition:
+    * calls the main loop functions and sets itself to be called back in 1000 /
+      SCREEN_FPS milliseconds
+side-effects:
+    * sets glutTimerFunc
 */
+void run_main_loop(int);
 
 int
 main(int argc, char** args)
@@ -23,11 +25,19 @@ main(int argc, char** args)
     // create double-buffered window
     glutInitDisplayMode(GLUT_DOUBLE);
     glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    glutCreateWindow("Polygon");
+    glutCreateWindow("Non-power-of-two textures");
 
     // do post window/context creation initialization
     if (!initGL()) {
         std::cerr << "unable to initialize graphics library\n";
+        return EXIT_FAILURE;
+    }
+
+    auto image_file = argc > 1 ? args[1] : "../textures/clip.png";
+
+    // load media
+    if (!load_media(image_file)) {
+        std::cerr << "unable to load media\n";
         return EXIT_FAILURE;
     }
 

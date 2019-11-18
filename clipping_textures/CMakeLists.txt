@@ -37,7 +37,6 @@ PRIVATE
 
 target_link_libraries(clipping_textures
 PRIVATE
-    stdc++fs
     GLUT::GLUT
     OpenGL::GL
     OpenGL::GLU

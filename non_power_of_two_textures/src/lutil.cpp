@@ -6,13 +6,16 @@
 
 #include <IL/il.h>
 #include <IL/ilu.h>
+
+#include "lrect.hpp"
 #include "ltexture.hpp"
+#include "macro_helpers.hpp"
 
 namespace {
 
-static ltexture g_loaded_texture;
+static ltexture g_non_2n_texture;
 
-} // namespace
+}
 
 bool
 initGL()
@@ -45,6 +48,7 @@ initGL()
 
     // initialize DevIL
     ilInit();
+    iluInit();
     ilClearColour(0xff, 0xff, 0xff, 0xff);
 
     // check for error
@@ -59,10 +63,10 @@ initGL()
 }
 
 bool
-load_media()
+load_media(std::string_view path)
 {
     // load texture
-    if (!g_loaded_texture.load_from_file("../textures/football.png")) {
+    if (!g_non_2n_texture.load_from_file(path)) {
         std::cerr << "unable to load file texture\n";
         return false;
     }
@@ -82,17 +86,9 @@ render()
     // clear color buffer
     glClear(GL_COLOR_BUFFER_BIT);
 
-    // calculate centered offsets
-    const std::array<GLfloat, 2> xy = {
-        gsl::narrow<GLfloat>(
-            SCREEN_WIDTH - g_loaded_texture.get_dimensions()[0]) /
-            2.f,
-        gsl::narrow<GLfloat>(
-            SCREEN_HEIGHT - g_loaded_texture.get_dimensions()[1]) /
-            2.f};
-
-    // render checkerboard texture
-    g_loaded_texture.render(xy);
+    // render texture
+    g_non_2n_texture.render({0.f, 0.f}/*{gsl::narrow_cast<GLfloat>(SCREEN_WIDTH - Wv(g_non_2n_texture.get_dimensions())),
+        gsl::narrow_cast<GLfloat>(SCREEN_HEIGHT - Hv(g_non_2n_texture.get_dimensions()))}*/);
 
     // update screen
     glutSwapBuffers();
