@@ -4,7 +4,7 @@ add_executable(texture_mapping_and_pixel_manipulation
     src/ltexture.hpp
     src/lutil.cpp
     src/lutil.hpp
-    src/texture_mapping_and_pixel_manipulation.cpp)
+    src/main.cpp)
 
 target_include_directories(texture_mapping_and_pixel_manipulation
 PRIVATE

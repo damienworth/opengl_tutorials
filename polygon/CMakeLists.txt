@@ -2,7 +2,7 @@ add_executable(polygon
     src/lopengl.hpp
     src/lutil.cpp
     src/lutil.hpp
-    src/polygon.cpp)
+    src/main.cpp)
 
 target_include_directories(polygon
 PRIVATE

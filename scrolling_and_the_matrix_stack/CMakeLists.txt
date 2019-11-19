@@ -2,7 +2,7 @@ add_executable(scrolling_and_the_matrix_stack
     src/lopengl.hpp
     src/lutil.cpp
     src/lutil.hpp
-    src/scrolling_and_the_matrix_stack.cpp)
+    src/main.cpp)
 
 target_include_directories(scrolling_and_the_matrix_stack
 PRIVATE

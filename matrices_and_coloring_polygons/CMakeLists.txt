@@ -2,7 +2,7 @@ add_executable(matrices_and_coloring_polygons
     src/lopengl.hpp
     src/lutil.cpp
     src/lutil.hpp
-    src/matrices_and_coloring_polygons.cpp)
+    src/main.cpp)
 
 target_include_directories(matrices_and_coloring_polygons
 PRIVATE

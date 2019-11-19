@@ -1,11 +1,11 @@
 add_executable(clipping_textures
-    src/clipping_textures.cpp
     src/lopengl.hpp
     src/lrect.hpp
     src/ltexture.cpp
     src/ltexture.hpp
     src/lutil.cpp
-    src/lutil.hpp)
+    src/lutil.hpp
+    src/main.cpp)
 
 target_include_directories(clipping_textures
 PRIVATE

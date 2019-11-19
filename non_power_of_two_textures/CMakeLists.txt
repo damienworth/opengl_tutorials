@@ -5,7 +5,7 @@ add_executable(non_power_of_two_textures
     src/ltexture.hpp
     src/lutil.cpp
     src/lutil.hpp
-    src/non_power_of_two_textures.cpp)
+    src/main.cpp)
 
 target_include_directories(non_power_of_two_textures
 PRIVATE

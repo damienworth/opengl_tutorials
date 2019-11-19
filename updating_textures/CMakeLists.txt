@@ -5,7 +5,7 @@ add_executable(updating_textures
     src/ltexture.hpp
     src/lutil.cpp
     src/lutil.hpp
-    src/updating_textures.cpp)
+    src/main.cpp)
 
 target_include_directories(updating_textures
 PRIVATE
