@@ -1,8 +1,10 @@
 #include "lutil.hpp"
 
+#include <algorithm>
 #include <array>
 #include <cstring>
 #include <gsl/gsl_util>
+#include <limits>
 
 #include <IL/il.h>
 #include <IL/ilu.h>
@@ -13,7 +15,7 @@
 
 namespace {
 
-static ltexture g_non_2n_texture;
+static ltexture g_circle_texture;
 
 }
 
@@ -66,10 +68,43 @@ bool
 load_media(std::string_view path)
 {
     // load texture
-    if (!g_non_2n_texture.load_from_file(path)) {
+    if (!g_circle_texture.load_from_file(path)) {
         std::cerr << "unable to load file texture\n";
         return false;
     }
+
+    // lock texture for modification
+    g_circle_texture.lock();
+
+    // calculate target color
+    GLuint   target_color;
+    GLubyte* colors = reinterpret_cast<GLubyte*>(&target_color);
+    Rc(colors)      = 0x0;
+    Gc(colors)      = 0xff;
+    Bc(colors)      = 0xff;
+    Ac(colors)      = 0xff;
+
+    // replace target color with transparent black
+    GLuint*     pixels      = g_circle_texture.data();
+    const auto& dims        = g_circle_texture.get_dimensions();
+    GLuint      pixel_count = Wv(dims) * Hv(dims);
+
+    for (int i = 0; i != gsl::narrow<int>(pixel_count); ++i) {
+        pixels[i] = pixels[i] == target_color ? 0x0 : pixels[i];
+    }
+
+    // diagonal lines
+    for (int y = 0; y < gsl::narrow<int>(Hv(dims)); ++y) {
+        for (int x = 0; x < gsl::narrow<int>(Wv(dims)); ++x) {
+            if (y % 10 != x % 10) {
+                g_circle_texture.set_pixel(
+                    {gsl::narrow<GLuint>(x), gsl::narrow<GLuint>(y)}, 0);
+            }
+        }
+    }
+
+    // update texture
+    g_circle_texture.unlock();
 
     return true;
 }
@@ -86,8 +121,12 @@ render()
     // clear color buffer
     glClear(GL_COLOR_BUFFER_BIT);
 
+    const auto& dims = g_circle_texture.get_dimensions();
+
     // render texture
-    g_non_2n_texture.render({0.f, 0.f});
+    g_circle_texture.render(
+        {gsl::narrow<float>(SCREEN_WIDTH - Wv(dims)) / 2.f,
+         gsl::narrow<float>(SCREEN_HEIGHT - Hv(dims)) / 2.f});
 
     // update screen
     glutSwapBuffers();
