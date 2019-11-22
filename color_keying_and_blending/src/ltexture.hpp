@@ -86,7 +86,47 @@ public:
         GLuint*, /* pixel data */
         std::array<GLuint, 2> /* texture dimensions */);
 
+    /*
+    pre-conditions:
+        * a valid OpenGL context
+        * valid member pixels
+    post-conditions:
+        * creates a texture from the number of pixels
+        * deletes member pixels on success
+        * reports error to console if texture could not be created
+    side-effects:
+        * binds a null-texture
+    */
+    bool load_from_pixels32();
+
     bool load_from_file(std::string_view);
+
+    /*
+    pre-conditions:
+        * initialized DevIL
+    post-conditions:
+        * loads member pixels from the given file
+        * pads image to have aligned dimensions
+        * reports error to console if pixels could not be loaded
+    side-effects: n/a
+    */
+    bool load_pixels_from_file(std::string_view);
+
+    /*
+    pre-conditions:
+        * a valid OpenGL context
+        * initialized DevIL
+    post-conditions:
+        * creates a texture from the given file
+        * pads image to have aligned dimensions
+        * sets given RGBA value to RFFGFFBFFA00 in pixel data
+        * if A = 0, only RGB components are compared
+        * reports error to console if texture could not be created
+    side-effects:
+        * binds a null-texture
+    */
+    bool load_from_file_with_color_key(
+        std::string_view, std::array<GLubyte, 3> rgb, GLubyte a = 0);
 
     /*
     pre-condition: valid GL context

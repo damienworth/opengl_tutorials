@@ -11,13 +11,24 @@
 
 namespace {
 
-template <typename Numeric>
+template <
+    typename Numeric,
+    typename = std::enable_if_t<std::is_integral_v<Numeric>>>
 Numeric
-align_against(Numeric num)
+align(Numeric num)
 {
     const auto bits_in_type =
         static_cast<Numeric>(sizeof(Numeric) * 8 /* bits */);
     return num + (bits_in_type - (num + bits_in_type) % bits_in_type);
+}
+
+template <
+    typename Numeric,
+    typename = std::enable_if_t<std::is_integral_v<Numeric>>>
+std::array<Numeric, 2>
+align(const std::array<Numeric, 2>& unaligned)
+{
+    return {align<Numeric>(Wv(unaligned)), align<Numeric>(Hv(unaligned))};
 }
 
 } // namespace
@@ -182,24 +193,26 @@ ltexture::load_from_file(std::string_view path)
         success = ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
         if (success != IL_TRUE) break;
 
-        auto img_width  = static_cast<GLuint>(ilGetInteger(IL_IMAGE_WIDTH));
-        auto img_height = static_cast<GLuint>(ilGetInteger(IL_IMAGE_HEIGHT));
+        auto img_dims =
+            std::array{gsl::narrow_cast<GLuint>(ilGetInteger(IL_IMAGE_WIDTH)),
+                       gsl::narrow_cast<GLuint>(ilGetInteger(IL_IMAGE_HEIGHT))};
 
-        auto tex_width  = align_against(img_width);
-        auto tex_height = align_against(img_height);
+        auto tex_dims = align(img_dims);
 
         // texture is the wrong size
-        if (tex_width != img_width || tex_height != img_height) {
+        if (tex_dims != img_dims) {
             // place image at upper left
             iluImageParameter(ILU_PLACEMENT, ILU_UPPER_LEFT);
 
             // resize image
             iluEnlargeCanvas(
-                gsl::narrow<int>(img_width), gsl::narrow<int>(img_height), 1);
+                gsl::narrow<int>(Wv(img_dims)),
+                gsl::narrow<int>(Hv(img_dims)),
+                1);
         }
 
         texture_loaded = load_from_pixels32(
-            reinterpret_cast<GLuint*>(ilGetData()), {img_width, img_height});
+            reinterpret_cast<GLuint*>(ilGetData()), std::move(img_dims));
     } while (false);
 
     // report error

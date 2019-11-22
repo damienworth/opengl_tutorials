@@ -30,7 +30,7 @@ main(int argc, char** args)
     // create double-buffered window
     glutInitDisplayMode(GLUT_DOUBLE);
     glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    glutCreateWindow("Non-power-of-two textures");
+    glutCreateWindow("Updating textures");
 
     // do post window/context creation initialization
     if (!initGL()) {

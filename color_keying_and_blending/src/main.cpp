@@ -30,7 +30,7 @@ main(int argc, char** args)
     // create double-buffered window
     glutInitDisplayMode(GLUT_DOUBLE);
     glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    glutCreateWindow("Non-power-of-two textures");
+    glutCreateWindow("Color keying and blending");
 
     // do post window/context creation initialization
     if (!initGL()) {
@@ -38,10 +38,8 @@ main(int argc, char** args)
         return EXIT_FAILURE;
     }
 
-    auto image_file = argc > 1 ? args[1] : "../textures/circle.png";
-
     // load media
-    if (!load_media(image_file)) {
+    if (!load_media("../textures/circle.png")) {
         std::cerr << "unable to load media\n";
         return EXIT_FAILURE;
     }

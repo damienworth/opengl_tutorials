@@ -23,6 +23,7 @@ if (NOT DevIL_FOUND)
 endif (NOT DevIL_FOUND)
 
 add_subdirectory(clipping_textures EXCLUDE_FROM_ALL)
+add_subdirectory(color_keying_and_blending EXCLUDE_FROM_ALL)
 add_subdirectory(loading_a_texture EXCLUDE_FROM_ALL)
 add_subdirectory(matrices_and_coloring_polygons EXCLUDE_FROM_ALL)
 add_subdirectory(non_power_of_two_textures EXCLUDE_FROM_ALL)
